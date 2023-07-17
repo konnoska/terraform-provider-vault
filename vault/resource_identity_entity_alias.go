@@ -81,11 +81,13 @@ func identityEntityAliasCreate(ctx context.Context, d *schema.ResourceData, meta
 	diags := diag.Diagnostics{}
 
 	mountAccessor := data[consts.FieldMountAccessor].(string)
+	id := d.Get("canonical_id").(string)
 	alias, err := entity.LookupEntityAlias(
 		client,
 		&entity.FindAliasParams{
 			Name:          name,
 			MountAccessor: mountAccessor,
+			Id:            id,
 		},
 	)
 	if err != nil {

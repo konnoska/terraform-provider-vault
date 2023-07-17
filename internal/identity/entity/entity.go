@@ -68,6 +68,8 @@ type FindAliasParams struct {
 	Name string
 	// MountAccessor to constrain the search to.
 	MountAccessor string
+	// Id of entity to constrain the search to
+	Id string
 }
 
 // FindAliases for the given FindAliasParams.
@@ -137,9 +139,14 @@ func LookupEntityAlias(client *api.Client, params *FindAliasParams) (*Alias, err
 		return nil, fmt.Errorf("alias mount_accessor cannot be empty params=%#v", params)
 	}
 
+	if params.Id == "" {
+		return nil, fmt.Errorf("alias id cannot be empty params=%#v", params)
+	}
+
 	resp, err := client.Logical().Write(LookupPath, map[string]interface{}{
 		"alias_name":           params.Name,
 		"alias_mount_accessor": params.MountAccessor,
+		"id":                   params.Id,
 	})
 	if err != nil {
 		return nil, err
